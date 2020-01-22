@@ -1,7 +1,5 @@
 package com.rahul.booking.hotel.mongodb.pojo;
 
-import org.bson.types.ObjectId;
-
 import java.util.List;
 
 public class Hotel extends AbstractDocument {
@@ -14,9 +12,11 @@ public class Hotel extends AbstractDocument {
         super();
     }
 
-    public Hotel(String name) {
-        super();
+    public Hotel(String name, Double price, Address address, List<Review> reviewList) {
         this.name = name;
+        this.price = price;
+        this.address = address;
+        this.reviewList = reviewList;
     }
 
     public String getName() {

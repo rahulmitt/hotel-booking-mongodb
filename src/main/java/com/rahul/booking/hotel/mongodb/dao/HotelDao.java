@@ -1,6 +1,5 @@
 package com.rahul.booking.hotel.mongodb.dao;
 
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -10,25 +9,32 @@ import com.rahul.booking.hotel.mongodb.util.converters.ConverterUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class HotelDao {
-
-    @Autowired
-    MongoClient mongoClient;
 
     private MongoCollection hotelsCollection;
 
-    public HotelDao() {
+    @Autowired
+    public HotelDao(MongoClient mongoClient) {
         hotelsCollection = mongoClient.getDatabase("hotelsDB").getCollection("hotels");
     }
 
+    public List<Hotel> createAllHotels(List<Hotel> hotelList) {
+        List<Hotel> responseList = new ArrayList<>();
+        for (Hotel hotel : hotelList) {
+            Hotel h = createHotel(hotel);
+            responseList.add(h);
+        }
+        return responseList;
+    }
+
     public Hotel createHotel(Hotel hotel) {
-        DBObject hotelDocument = ConverterUtils.toDBObject(hotel);
+        Document hotelDocument = ConverterUtils.toDBObject(hotel);
         hotelsCollection.insertOne(hotelDocument);
         ObjectId id = (ObjectId) hotelDocument.get("_id");
         hotel.setId(id.toString());
@@ -40,7 +46,7 @@ public class HotelDao {
         FindIterable<Document> fi = hotelsCollection.find();
         MongoCursor<Document> cursor = fi.iterator();
         try {
-            while(cursor.hasNext()) {
+            while (cursor.hasNext()) {
                 Document o = cursor.next();
                 Hotel hotel = ConverterUtils.toHotel(o);
                 hotelList.add(hotel);
@@ -50,5 +56,13 @@ public class HotelDao {
         }
 
         return hotelList;
+    }
+
+    public void update() {
+        //TODO:
+    }
+
+    public void dropHotelsCollection() {
+        hotelsCollection.drop();
     }
 }

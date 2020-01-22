@@ -1,5 +1,6 @@
 package com.rahul.booking.hotel.mongodb.service;
 
+import com.rahul.booking.hotel.mongodb.dao.HotelDao;
 import com.rahul.booking.hotel.mongodb.pojo.Hotel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,9 @@ import java.util.List;
 public class HotelService {
 
     @Autowired
-    public HotelService hotelService;
+    public HotelDao hotelDao;
 
     public List<Hotel> fetchAllHotels() {
-        return  hotelService.fetchAllHotels();
+        return hotelDao.fetchAllHotels();
     }
 }
